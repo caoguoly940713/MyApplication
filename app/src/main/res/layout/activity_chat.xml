@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/users"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_margin="20dp"
+        android:divider="@null" />
+
+    <TextView
+        android:id="@+id/current_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="当前用户"
+        android:textColor="#000000" />
+
+    <EditText
+        android:id="@+id/to"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="发送给谁?"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="发送内容?"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="发送消息"
+        android:textColor="#000000" />
+
+    <TextView
+        android:id="@+id/fresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="刷新在线列表"
+        android:textColor="#000000" />
+</LinearLayout>
