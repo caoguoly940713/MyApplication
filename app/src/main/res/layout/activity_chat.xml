@@ -2,11 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top|center_horizontal"
     android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="服务端历史登录"
+        android:textColor="#000000" />
 
     <ListView
         android:id="@+id/users"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_margin="20dp"
         android:divider="@null" />
@@ -37,19 +45,17 @@
 
     <TextView
         android:id="@+id/send"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:gravity="center"
         android:text="发送消息"
         android:textColor="#000000" />
 
     <TextView
         android:id="@+id/fresh"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:gravity="center"
         android:text="刷新在线列表"
         android:textColor="#000000" />
 </LinearLayout>

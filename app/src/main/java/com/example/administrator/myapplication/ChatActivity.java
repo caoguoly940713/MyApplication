@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     ListView mListView;
 
     private ChannelFuture channelFuture;
-    private ArrayAdapter<String> mAdapter;
+    private UserListAdapter mAdapter;
     private ArrayList<String> mList;
     private NotificationUtil notificationUtil;
 
@@ -128,7 +128,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         mList = new ArrayList<>();
-        mAdapter = new ArrayAdapter<>(ChatActivity.this, R.layout.item_user, mList);
+        mAdapter = new UserListAdapter(mList);
         mListView.setAdapter(mAdapter);
 
         currentUser.setText("当前用户：" + CurrentUser.getUserName());
@@ -152,7 +152,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.send) {
             String inputStr = input.getText().toString();
             String toStr = to.getText().toString();
-
             channelFuture.channel().writeAndFlush(makeJson(toStr, inputStr));
         }
 
