@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.administrator.myapplication.CurrentUser;
 import com.example.administrator.myapplication.R;
+import com.example.administrator.myapplication.service.HeartBeatService;
 import com.example.administrator.myapplication.utils.NettyHelper;
 
 import org.json.JSONException;
@@ -131,6 +132,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else {
                 channelFuture.channel().writeAndFlush(makeJson(nameStr, passStr));
                 CurrentUser.setUserName(nameStr);
+
+                Intent serviceIntent = new Intent(this, HeartBeatService.class);
+                startService(serviceIntent);
+
                 Intent intent = new Intent(this, ChatActivity.class);
                 startActivity(intent);
             }
