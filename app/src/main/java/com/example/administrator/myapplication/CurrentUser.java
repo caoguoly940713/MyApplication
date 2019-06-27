@@ -1,7 +1,9 @@
 package com.example.administrator.myapplication;
 
-import io.netty.channel.Channel;
-
+/**
+ * 静态实体类
+ * 表示当前登录此app的用户
+ */
 public class CurrentUser {
     private static String userName;
 

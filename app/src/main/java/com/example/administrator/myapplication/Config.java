@@ -5,6 +5,6 @@ package com.example.administrator.myapplication;
  */
 public class Config {
 
-    static final String ADDRESS = "192.168.0.104";
-    static final int PORT = 8000;
+    public static final String ADDRESS = "192.168.0.104";
+    public static final int PORT = 8000;
 }

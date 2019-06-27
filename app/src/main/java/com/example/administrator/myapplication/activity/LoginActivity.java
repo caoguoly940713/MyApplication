@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.myapplication.CurrentUser;
-import com.example.administrator.myapplication.NettyHelper;
 import com.example.administrator.myapplication.R;
+import com.example.administrator.myapplication.utils.NettyHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;

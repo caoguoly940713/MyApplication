@@ -13,10 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.myapplication.CurrentUser;
-import com.example.administrator.myapplication.NettyHelper;
-import com.example.administrator.myapplication.NotificationUtil;
 import com.example.administrator.myapplication.R;
-import com.example.administrator.myapplication.UserListAdapter;
+import com.example.administrator.myapplication.adapter.UserListAdapter;
+import com.example.administrator.myapplication.utils.NettyHelper;
+import com.example.administrator.myapplication.utils.NotificationUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

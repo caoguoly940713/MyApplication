@@ -1,10 +1,12 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.administrator.myapplication.R;
 
 import java.util.List;
 
