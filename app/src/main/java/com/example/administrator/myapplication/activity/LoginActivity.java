@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.administrator.myapplication.CurrentUser;
+import com.example.administrator.myapplication.NettyHelper;
+import com.example.administrator.myapplication.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

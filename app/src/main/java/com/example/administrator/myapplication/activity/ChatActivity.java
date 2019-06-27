@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -7,11 +7,16 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.administrator.myapplication.CurrentUser;
+import com.example.administrator.myapplication.NettyHelper;
+import com.example.administrator.myapplication.NotificationUtil;
+import com.example.administrator.myapplication.R;
+import com.example.administrator.myapplication.UserListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,7 +176,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("type", "chat");
-            jsonObject.put("from", CurrentUser.userName);
+            jsonObject.put("from", CurrentUser.getUserName());
             jsonObject.put("to", s1);
             jsonObject.put("message", s2);
         } catch (JSONException e) {
@@ -184,6 +189,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("type", "request");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+    private String makeJsonRequest2() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("type", "test");
+            jsonObject.put("who", CurrentUser.getUserName());
         } catch (JSONException e) {
             e.printStackTrace();
         }

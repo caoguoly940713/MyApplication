@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 public class NotificationUtil {
     private Context context;
@@ -32,8 +33,13 @@ public class NotificationUtil {
         builder.setOngoing(true);
         builder.setNumber(20);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId("MyApplication");
+        }
+
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_NO_CLEAR;  //只有全部清除时，Notification才会清除
         notificationManager.notify("message", 1, notification);
     }
+
 }
