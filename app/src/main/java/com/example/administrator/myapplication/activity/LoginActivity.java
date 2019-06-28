@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.myapplication.BuildConfig;
 import com.example.administrator.myapplication.CurrentUser;
 import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.service.HeartBeatService;
@@ -46,6 +47,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     TextView login;
     @BindView(R.id.recon)
     TextView recon;
+    @BindView(R.id.check_update)
+    TextView checkUpdate;
 
     private ChannelFuture channelFuture;
     private List<ChannelHandler> channelHandlers;
@@ -82,7 +85,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Toast.makeText(LoginActivity.this, "msg:" + msg.obj.toString(), Toast.LENGTH_SHORT).show();
+
+            try {
+                JSONObject jsonObject = new JSONObject(msg.obj.toString());
+                String type = jsonObject.optString("type");
+
+                if ("version".equals(type)) {
+                    String versionCode = jsonObject.optString("message");
+                    String message = "目前的版本为：" + BuildConfig.VERSION_NAME + " 最新版本为：" + versionCode;
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+
+                if ("result".equals(type)) {
+                    String message = jsonObject.optString("message");
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -115,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void initListener() {
         login.setOnClickListener(this);
         recon.setOnClickListener(this);
+        checkUpdate.setOnClickListener(this);
     }
 
     @Override
@@ -140,6 +161,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
             }
         }
+
+        if (v.getId() == R.id.check_update) {
+            channelFuture.channel().writeAndFlush(makeJsonRequest());
+        }
     }
 
     /**
@@ -155,6 +180,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             jsonObject.put("type", "login");
             jsonObject.put("name", s1);
             jsonObject.put("pass", s2);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+    private String makeJsonRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("type", "check");
         } catch (JSONException e) {
             e.printStackTrace();
         }
