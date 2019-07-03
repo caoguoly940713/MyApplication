@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.administrator.myapplication.utils.NettyHelper;
 
@@ -35,11 +36,13 @@ public class HeartBeatService extends Service {
 
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            Toast.makeText(HeartBeatService.this, "连接成功", Toast.LENGTH_SHORT).show();
             online = true;
         }
 
         @Override
         public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+            Toast.makeText(HeartBeatService.this, "连接断开", Toast.LENGTH_SHORT).show();
             online = false;
         }
 

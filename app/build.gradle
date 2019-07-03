@@ -7,8 +7,9 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -29,11 +30,15 @@ dependencies {
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+//    implementation 'com.android.support:design:28.0.0'
     implementation 'com.jakewharton:butterknife:8.2.1'
     implementation 'com.jakewharton:butterknife-compiler:8.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.2.1'
 
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation 'io.netty:netty-all:4.1.36.Final'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    compile 'com.getui:sdk:2.13.2.0'
 }

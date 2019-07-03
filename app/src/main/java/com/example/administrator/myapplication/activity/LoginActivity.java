@@ -57,26 +57,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //ChannelHandler不放业务逻辑，只发送message，然后交给Handler处理
     private class LoginHandler extends ChannelInboundHandlerAdapter {
         @Override
-        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-            Message message = handler.obtainMessage();
-            message.what = 100;
-            message.obj = "连接成功";
-            handler.sendMessage(message);
-        }
-
-        @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             Message message = handler.obtainMessage();
             message.obj = msg;
             message.what = 100;
-            handler.sendMessage(message);
-        }
-
-        @Override
-        public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-            Message message = handler.obtainMessage();
-            message.what = 100;
-            message.obj = "连接断开";
             handler.sendMessage(message);
         }
     }
@@ -91,9 +75,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String type = jsonObject.optString("type");
 
                 if ("version".equals(type)) {
-                    String versionCode = jsonObject.optString("message");
-                    String message = "目前的版本为：" + BuildConfig.VERSION_NAME + " 最新版本为：" + versionCode;
-                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                    int versionCode = Integer.parseInt(jsonObject.optString("message"));
+
+                    if (versionCode > BuildConfig.VERSION_CODE) {
+                        downLoadPackage();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 if ("result".equals(type)) {
@@ -106,11 +94,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
+    //下载安装包
+    private void downLoadPackage() {
+        // TODO: 2019/6/28
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        Intent serviceIntent = new Intent(this, HeartBeatService.class);
+        startService(serviceIntent);
 
         initView();
         initData();
@@ -154,9 +150,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 channelFuture.channel().writeAndFlush(makeJson(nameStr, passStr));
                 CurrentUser.setUserName(nameStr);
 
-                Intent serviceIntent = new Intent(this, HeartBeatService.class);
-                startService(serviceIntent);
-
                 Intent intent = new Intent(this, ChatActivity.class);
                 startActivity(intent);
             }
@@ -167,13 +160,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    /**
-     * 将数据封装成json
-     *
-     * @param s1 用户名
-     * @param s2 密码
-     * @return json字符串
-     */
     private String makeJson(String s1, String s2) {
         JSONObject jsonObject = new JSONObject();
         try {
