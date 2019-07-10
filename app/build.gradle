@@ -3,13 +3,28 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.administrator.myapplication"
+        applicationId "com.caikeng.app"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "Ivyp3jN5eN8F4GapZbv5O3",
+                GETUI_APP_KEY   : "lyggdYn5EB61IGhq9e4Jv9",
+                GETUI_APP_SECRET: "cxuS4yqbIt5M8uUszqOQrA",
+
+                HUAWEI_APP_ID : "100916021",
+
+                XIAOMI_APP_ID : "2882303761518056004",
+                XIAOMI_APP_KEY : "5921805619004"
+        ]
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v8a", "armeabi-v7a", "x86_x64", "x86"
+        }
     }
     buildTypes {
         release {
@@ -30,15 +45,21 @@ dependencies {
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation 'com.android.support:appcompat-v7:28.0.0'
-//    implementation 'com.android.support:design:28.0.0'
     implementation 'com.jakewharton:butterknife:8.2.1'
     implementation 'com.jakewharton:butterknife-compiler:8.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.2.1'
 
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation 'io.netty:netty-all:4.1.36.Final'
-
     implementation 'com.android.support:multidex:1.0.3'
 
-    compile 'com.getui:sdk:2.13.2.0'
+    implementation 'com.umeng.umsdk:common:1.5.4'
+    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+    implementation 'com.umeng.umsdk:push:6.0.1'
+
+    implementation 'com.getui:sdk:2.13.2.0'
+    implementation 'com.getui:hwp:1.0.4'
+    implementation 'com.getui:xmp:1.0.3'
+
+    implementation 'com.qianwen:update-app:3.5.2'
 }

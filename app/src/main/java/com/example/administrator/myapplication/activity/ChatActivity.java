@@ -16,7 +16,7 @@ import com.example.administrator.myapplication.CurrentUser;
 import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.adapter.UserListAdapter;
 import com.example.administrator.myapplication.utils.NettyHelper;
-import com.example.administrator.myapplication.utils.NotificationUtil;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +56,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ChannelFuture channelFuture;
     private UserListAdapter mAdapter;
     private ArrayList<String> mList;
-    private NotificationUtil notificationUtil;
 
     private class MainHandler extends ChannelInboundHandlerAdapter {
         @Override
@@ -85,7 +84,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     String content = from + " 发来消息: " + message;
 
                     Toast.makeText(ChatActivity.this, content, Toast.LENGTH_SHORT).show();
-                    notificationUtil.postNotification(content);
                 }
 
                 //处理服务器发送的用户列表
@@ -108,6 +106,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
+
+        PushAgent.getInstance(this).onAppStart();
 
         initView();
         initData();
@@ -137,7 +137,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         mListView.setAdapter(mAdapter);
 
         currentUser.setText("当前用户：" + CurrentUser.getUserName());
-        notificationUtil = new NotificationUtil(this);
     }
 
     public void initListener() {

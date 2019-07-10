@@ -1,12 +1,21 @@
 package com.example.administrator.myapplication.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +26,9 @@ import com.example.administrator.myapplication.CurrentUser;
 import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.service.HeartBeatService;
 import com.example.administrator.myapplication.utils.NettyHelper;
+import com.umeng.message.PushAgent;
+import com.vector.update_app.HttpManager;
+import com.vector.update_app.UpdateAppManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +44,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+
+import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
 /**
  * 登录页面,Bootstrap初始化完成就会自动绑定channelHandlers
@@ -75,13 +89,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String type = jsonObject.optString("type");
 
                 if ("version".equals(type)) {
-                    int versionCode = Integer.parseInt(jsonObject.optString("message"));
+                    downLoadPackage();
+//                    int versionCode = Integer.parseInt(jsonObject.optString("message"));
 
-                    if (versionCode > BuildConfig.VERSION_CODE) {
-                        downLoadPackage();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
-                    }
+//                    if (versionCode > BuildConfig.VERSION_CODE) {
+//                        downLoadPackage();
+//                    } else {
+//                        Toast.makeText(LoginActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
+//                    }
                 }
 
                 if ("result".equals(type)) {
@@ -96,7 +111,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //下载安装包
     private void downLoadPackage() {
-        // TODO: 2019/6/28
+        final String url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("download", "下载进度", IMPORTANCE_DEFAULT);
+            Notification.Builder builder = new Notification.Builder(this, "download");
+            builder.setContentText("下载进度度");
+            builder.setContentTitle("标题");
+            builder.setSmallIcon(R.drawable.ic_launcher_background);
+
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            manager.createNotificationChannel(channel);
+            manager.notify(1, builder.build());
+        }
     }
 
     @Override
@@ -104,6 +131,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        PushAgent.getInstance(this).onAppStart();
 
         Intent serviceIntent = new Intent(this, HeartBeatService.class);
         startService(serviceIntent);
