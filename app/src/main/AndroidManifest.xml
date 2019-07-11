@@ -13,51 +13,62 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".MyApplication"
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme"
-    tools:ignore="GoogleAppIndexingWarning"
-    tools:replace="android:allowBackup">
-    <activity android:name=".activity.UtilActivity" />
-
-    <activity
-        android:name=".activity.LoginActivity"
-        android:process=":pushservice">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-
-    <activity android:name=".activity.ChatActivity" />
-
-    <service android:name=".service.HeartBeatService" />
-
-    <activity
-        android:name="com.yalantis.ucrop.UCropActivity"
-        android:screenOrientation="portrait"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
-    <service
-        android:name=".service.PushTestService"
-        android:exported="true"
-        android:label="PushService"
-        android:process=":pushservice" />
-
-    <service
-        android:name=".service.ReceiveIntentService"
-        android:permission="android.permission.BIND_JOB_SERVICE" />
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:allowBackup">
+        <activity android:name=".activity.UtilActivity" />
 
         <activity
-        android:name=".activity.NotifyClickActivity"
-        android:exported="true"
-        android:launchMode="singleTask" />
-</application></manifest>
+            android:name=".activity.LoginActivity"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.ChatActivity" />
+
+        <service android:name=".service.HeartBeatService" />
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <service
+            android:name=".service.PushTestService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice" />
+
+        <service
+            android:name=".service.ReceiveIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <activity
+            android:name=".activity.NotifyClickActivity"
+            android:exported="true"
+            android:launchMode="singleTask" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.caikeng.app.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>

@@ -4,20 +4,20 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +27,14 @@ import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.service.HeartBeatService;
 import com.example.administrator.myapplication.utils.NettyHelper;
 import com.umeng.message.PushAgent;
-import com.vector.update_app.HttpManager;
-import com.vector.update_app.UpdateAppManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +46,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
+import static android.os.Build.*;
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 /**
  * 登录页面,Bootstrap初始化完成就会自动绑定channelHandlers
@@ -66,6 +75,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private ChannelFuture channelFuture;
     private List<ChannelHandler> channelHandlers;
+    private RemoteViews remoteViews;
+    private NotificationManager manager;
+    private Notification.Builder nb;
 
     @ChannelHandler.Sharable
     //ChannelHandler不放业务逻辑，只发送message，然后交给Handler处理
@@ -87,18 +99,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 JSONObject jsonObject = new JSONObject(msg.obj.toString());
                 String type = jsonObject.optString("type");
-
                 if ("version".equals(type)) {
                     downLoadPackage();
 //                    int versionCode = Integer.parseInt(jsonObject.optString("message"));
-
 //                    if (versionCode > BuildConfig.VERSION_CODE) {
 //                        downLoadPackage();
 //                    } else {
 //                        Toast.makeText(LoginActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
 //                    }
                 }
-
                 if ("result".equals(type)) {
                     String message = jsonObject.optString("message");
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -111,18 +120,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //下载安装包
     private void downLoadPackage() {
-        final String url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
+        String url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("download", "下载进度", IMPORTANCE_DEFAULT);
-            Notification.Builder builder = new Notification.Builder(this, "download");
-            builder.setContentText("下载进度度");
-            builder.setContentTitle("标题");
-            builder.setSmallIcon(R.drawable.ic_launcher_background);
+            channel.setImportance(NotificationManager.IMPORTANCE_LOW);
 
-            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            nb = new Notification.Builder(this, "download");
+            nb.setSmallIcon(R.drawable.ic_launcher_background).setContentTitle("下载中");
+            nb.setProgress(100, 0, false).setAutoCancel(true);
+
+            manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             manager.createNotificationChannel(channel);
-            manager.notify(1, builder.build());
+
+            OkHttpClient client = new OkHttpClient();
+            Request.Builder builder = new Request.Builder();
+            Request request = builder.url(url).get().build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    InputStream inputStream = response.body().byteStream();
+                    File espd = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
+                    String apkPath = espd.getPath() + "/" + "BLiao" + System.currentTimeMillis() + ".apk";
+                    FileOutputStream fos = new FileOutputStream(new File(apkPath));
+                    long contentLength = response.body().contentLength();
+
+                    int length = 0;
+                    byte[] bytes = new byte[10240];
+                    while ((length = inputStream.read(bytes)) != -1) {
+                        fos.write(bytes, 0, length);
+                        double percent = fos.getChannel().position() * 100.0 / contentLength;
+
+                        nb.setProgress(100, (int) percent, false);
+                        manager.notify(1, nb.build());
+                    }
+
+                    fos.flush();
+                    fos.close();
+                    response.body().close();
+                    manager.cancel(1);
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    Uri contentUri = FileProvider.getUriForFile(getApplication(), "com.caikeng.app.fileProvider", new File(apkPath));
+                    intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                    startActivity(intent);
+                }
+            });
         }
     }
 

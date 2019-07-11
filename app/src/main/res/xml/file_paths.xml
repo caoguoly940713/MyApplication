@@ -1,0 +1,6 @@
+<resources>
+    <paths>
+        <external-path path="Android/data/com.caikeng.app/" name="files_root" />
+        <external-path path="." name="external_storage_root" />
+    </paths>
+</resources>
