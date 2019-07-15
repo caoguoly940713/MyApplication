@@ -100,13 +100,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 JSONObject jsonObject = new JSONObject(msg.obj.toString());
                 String type = jsonObject.optString("type");
                 if ("version".equals(type)) {
-                    downLoadPackage();
-//                    int versionCode = Integer.parseInt(jsonObject.optString("message"));
-//                    if (versionCode > BuildConfig.VERSION_CODE) {
-//                        downLoadPackage();
-//                    } else {
-//                        Toast.makeText(LoginActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
-//                    }
+                    int versionCode = Integer.parseInt(jsonObject.optString("message"));
+                    if (versionCode > BuildConfig.VERSION_CODE) {
+                        downLoadPackage();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "已是最新版本", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 if ("result".equals(type)) {
                     String message = jsonObject.optString("message");
@@ -118,7 +117,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
-    //下载安装包
     private void downLoadPackage() {
         String url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
 
@@ -126,13 +124,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             NotificationChannel channel = new NotificationChannel("download", "下载进度", IMPORTANCE_DEFAULT);
             channel.setImportance(NotificationManager.IMPORTANCE_LOW);
 
+            //初始化通知ui
             nb = new Notification.Builder(this, "download");
             nb.setSmallIcon(R.drawable.ic_launcher_background).setContentTitle("下载中");
             nb.setProgress(100, 0, false).setAutoCancel(true);
 
             manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            //创建通道，注意这一步很重要
             manager.createNotificationChannel(channel);
 
+            //使用okhttp发送get请求
             OkHttpClient client = new OkHttpClient();
             Request.Builder builder = new Request.Builder();
             Request request = builder.url(url).get().build();
@@ -147,16 +148,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     InputStream inputStream = response.body().byteStream();
                     File espd = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);
+                    //缓存的路径以及文件名
                     String apkPath = espd.getPath() + "/" + "BLiao" + System.currentTimeMillis() + ".apk";
                     FileOutputStream fos = new FileOutputStream(new File(apkPath));
+
+                    //目标文件的总大小
                     long contentLength = response.body().contentLength();
 
                     int length = 0;
+                    //字节数组缓冲区要设置为足够大，过小会导致io速度慢
                     byte[] bytes = new byte[10240];
                     while ((length = inputStream.read(bytes)) != -1) {
                         fos.write(bytes, 0, length);
-                        double percent = fos.getChannel().position() * 100.0 / contentLength;
 
+                        //已经写入的文件内容所占百分数
+                        double percent = fos.getChannel().position() * 100.0 / contentLength;
+                        //手动刷新进度条
                         nb.setProgress(100, (int) percent, false);
                         manager.notify(1, nb.build());
                     }
@@ -164,11 +171,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     fos.flush();
                     fos.close();
                     response.body().close();
+                    //下载完毕关闭要隐藏通知
                     manager.cancel(1);
 
+                    //调出系统安装应用页面
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    //fileprovider要在清单文件中声明
                     Uri contentUri = FileProvider.getUriForFile(getApplication(), "com.caikeng.app.fileProvider", new File(apkPath));
                     intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
                     startActivity(intent);

@@ -25,16 +25,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".activity.UtilActivity" />
-
-        <activity
-            android:name=".activity.LoginActivity"
-            android:process=":pushservice">
+        <activity android:name=".activity.UtilActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:process=":pushservice">
+
         </activity>
 
         <activity android:name=".activity.ChatActivity" />
