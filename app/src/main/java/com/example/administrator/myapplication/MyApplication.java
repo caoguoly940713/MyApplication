@@ -3,6 +3,7 @@ package com.example.administrator.myapplication;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 import android.util.Log;
+import android.view.View;
 
 import com.example.administrator.myapplication.service.PushTestService;
 import com.example.administrator.myapplication.service.ReceiveIntentService;
@@ -43,5 +44,6 @@ public class MyApplication extends Application {
         MultiDex.install(this);
         PushManager.getInstance().initialize(this, PushTestService.class);
         PushManager.getInstance().registerPushIntentService(this, ReceiveIntentService.class);
+
     }
 }

@@ -206,8 +206,7 @@ public class Utils {
         }
     }
 
-    public static void update(final Context context) {
-        String url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
+    public static void update(final Context context,String url) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("download", "下载进度", IMPORTANCE_DEFAULT);

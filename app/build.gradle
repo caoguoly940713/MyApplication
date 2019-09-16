@@ -11,17 +11,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
-        manifestPlaceholders = [
-                GETUI_APP_ID    : "Ivyp3jN5eN8F4GapZbv5O3",
-                GETUI_APP_KEY   : "lyggdYn5EB61IGhq9e4Jv9",
-                GETUI_APP_SECRET: "cxuS4yqbIt5M8uUszqOQrA",
-
-                HUAWEI_APP_ID : "100916021",
-
-                XIAOMI_APP_ID : "2882303761518056004",
-                XIAOMI_APP_KEY : "5921805619004"
-        ]
-
         ndk {
             abiFilters "armeabi", "armeabi-v8a", "armeabi-v7a", "x86_x64", "x86"
         }

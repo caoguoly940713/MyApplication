@@ -38,7 +38,7 @@ public class UtilActivity extends AppCompatActivity implements View.OnClickListe
     private String tag;
     private String src;
     //视频时长
-    private int duration;
+    private long duration;
 
     @BindView(R.id.video)
     TextView video;
@@ -58,6 +58,8 @@ public class UtilActivity extends AppCompatActivity implements View.OnClickListe
     TextView info;
     @BindView(R.id.crop)
     ImageView crop;
+    @BindView(R.id.update)
+    TextView update;
     private long select;
 
     @Override
@@ -88,6 +90,7 @@ public class UtilActivity extends AppCompatActivity implements View.OnClickListe
         video.setOnClickListener(this);
         submit.setOnClickListener(this);
         portrait.setOnClickListener(this);
+        update.setOnClickListener(this);
 
         //拖动进度条的会生成对应的预览图和时间
         control.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -131,6 +134,11 @@ public class UtilActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(intent, 2);
         }
 
+        if (v.getId() == R.id.update) {
+            String url = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
+            Utils.update(mContext, url);
+        }
+
         //点击开始转码弹出提示
         if (v.getId() == R.id.submit) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -167,7 +175,7 @@ public class UtilActivity extends AppCompatActivity implements View.OnClickListe
                 label.setVisibility(View.VISIBLE);
                 info.setVisibility(View.VISIBLE);
 
-                duration = (int) Utils.getVideoInfo(mContext, data).get("duration");
+                duration = (long) Utils.getVideoInfo(mContext, data).get("duration");
                 src = FileUtils.getPath(mContext, data.getData());
                 tag = Environment.getExternalStorageDirectory() + "/1/";
 
